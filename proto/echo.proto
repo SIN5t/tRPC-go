@@ -1,0 +1,19 @@
+syntax = "proto3";
+package demo.simplest;
+
+option go_package = "github.com/sin5t/trpc-go-demo/proto/simplest";
+
+message HelloRequest {
+  string greeting = 1;
+}
+
+message HelloResponse {
+  int32  err_code  = 1;
+  string err_msg   = 2;
+  string response  = 3;
+  double timestamp = 4;
+}
+
+service HelloWorld {
+  rpc Hello(HelloRequest) returns (HelloResponse); // @alias=/demo/Hello
+}
