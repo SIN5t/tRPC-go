@@ -1,7 +1,7 @@
 syntax = "proto3";
 package demo.simplest;
 
-option go_package = "github.com/sin5t/trpc-go-demo/proto/simplest";
+option go_package = "github.com/SIN5t/tRPC-go/proto/simplest";
 
 message HelloRequest {
   string greeting = 1;

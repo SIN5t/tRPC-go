@@ -1,0 +1,8 @@
+syntax = "proto3";
+package demo.common;
+option go_package = "github.com/SIN5t/tRPC-go/proto/common";
+
+// 通用的请求元数据
+message MetaData{
+  string trace_id = 1;
+}

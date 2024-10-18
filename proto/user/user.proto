@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package demo.account;
+
+option go_package = "github.com/SIN5t/tRPC-go/proto/user";
+
+import "common/metadata.proto";
+
+message GetAccountByUserNameRequest {
+  string username = 1;
+  common.MetaData meta_data = 2;
+}
+
+message GetAccountByUserNameResponse {
+  int32  err_code = 1;
+  string err_msg  = 2;
+
+  string user_id  = 3;
+  string username = 4;
+  string password_hash = 5;
+  int64  create_ts_sec = 6;
+}
+
+// service 提供用户信息服务
+service User {
+  rpc GetAccountByUserName(GetAccountByUserNameRequest) returns (GetAccountByUserNameResponse);
+}
