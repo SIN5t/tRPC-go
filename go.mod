@@ -1,4 +1,4 @@
-module tRPC-go
+module github.com/SIN5t/tRPC-go
 
 go 1.20
 
