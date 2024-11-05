@@ -10,3 +10,9 @@ $(PB_DIR_TGTS):
 		ls *.trpc.go | xargs -I DD mockgen -source=DD -destination=mock/DD -package=mock ; \
 		find `pwd` -name '*.pb.go'; \
 	done
+
+
+
+# 启动服务，指定conf文件
+	#cd app/user/; go run . -conf conf/trpc_go.yaml
+	#cd app/http-auth-server/; go run . -conf conf/trpc_go.yaml
