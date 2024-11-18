@@ -2,20 +2,23 @@ package service
 
 import (
 	"context"
+	"github.com/SIN5t/tRPC-go/app/user/entity"
 	"github.com/SIN5t/tRPC-go/proto/user"
 	"trpc.group/trpc-go/trpc-go/server"
 )
 
 // 注册服务
 type userImpl struct {
+	d Dependency
 }
 
-func NewUserImpl() *userImpl {
-	return &userImpl{}
+type Dependency interface {
+	QueryAccountByUsername(ctx context.Context, username string) (*entity.Account, error)
 }
 
-func RegisterUserService(s server.Service) error {
-	user.RegisterUserService(s, NewUserImpl())
+func RegisterUserService(s server.Service, dep Dependency) error {
+	u := userImpl{d: dep}
+	user.RegisterUserService(s, u)
 	return nil
 }
 

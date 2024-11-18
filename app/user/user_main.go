@@ -1,18 +1,29 @@
 package main
 
 import (
+	"github.com/SIN5t/tRPC-go/app/user/repo"
 	"github.com/SIN5t/tRPC-go/app/user/service"
 	"trpc.group/trpc-go/trpc-go"
-	"trpc.group/trpc-go/trpc-go/log"
 )
 
 func main() {
 	s := trpc.NewServer()
-	if err := service.RegisterUserService(s); err != nil {
-		log.Fatal("server register err %v", err)
+	r, err := initRepo()
+	if err != nil {
+		return
 	}
-	if err := s.Serve(); err != nil {
-		log.Fatal("server Serve err %v", err)
+	if err := service.RegisterUserService(s, r); err != nil {
+		return
 	}
+	s.Serve()
 
+}
+
+func initRepo() (*repo.Repo, error) {
+	d := repo.Dependency{UserAccountDBClientName: "db."}
+	r, err := repo.NewRepo(d)
+	if err != nil {
+		return nil, err
+	}
+	return r, nil
 }
