@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"trpc.group/trpc-go/trpc-go/server"
 )
 import "github.com/SIN5t/tRPC-go/proto/community"
 
@@ -14,7 +15,13 @@ type communityImpl struct {
 type Dependency interface {
 	/// repo中有该接口的实现类，那么创建communityImpl就可以用repo的结构体作为成员
 	QueryTopicById(ctx context.Context, topicId int64) (*community.Topic, error)
-	QueryPostByTopicId(ctx context.Context, req *community.GetPostRequest) (*community.GetPostResponse, error)
+	QueryPostByTopicId(ctx context.Context, topicId int64) (*community.GetPostResponse, error)
+}
+
+func RegisterCommunityService(s server.Service, dependency Dependency) error {
+	comm := &communityImpl{d: dependency}
+	community.RegisterGetTopicServiceService(s, comm)
+	return nil
 }
 
 func (comm *communityImpl) GetTopicById(ctx context.Context, request *community.GetTopicRequest) (*community.GetTopicResponse, error) {
@@ -30,4 +37,18 @@ func (comm *communityImpl) GetTopicById(ctx context.Context, request *community.
 		Topic:   topic,
 	}
 	return commResp, err
+}
+
+//GetPostByTopicId(ctx context.Context, req *GetPostRequest) (*GetPostResponse, error) // @alias=/demo/community/post
+
+func (comm *communityImpl) GetPostByTopicId(ctx context.Context, req *community.GetPostRequest) (*community.GetPostResponse, error) {
+	resp := &community.GetPostResponse{
+		ErrCode:    0,
+		ErrMsg:     "",
+		Id:         "",
+		ParentId:   "",
+		Content:    "",
+		CreateTime: "",
+	}
+	return resp, nil
 }
