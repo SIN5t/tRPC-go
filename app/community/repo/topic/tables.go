@@ -1,5 +1,7 @@
 package topic
 
-type topicItem struct {
-	Id int64 `db:"id"`
+type TopicItem struct {
+	Id        int64  `db:"id"`
+	Title     string `db:"title"`
+	CreatedAt string `db:"created_at"`
 }

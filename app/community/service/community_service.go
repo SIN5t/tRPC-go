@@ -15,7 +15,7 @@ type communityImpl struct {
 type Dependency interface {
 	/// repo中有该接口的实现类，那么创建communityImpl就可以用repo的结构体作为成员
 	QueryTopicById(ctx context.Context, topicId int64) (*community.Topic, error)
-	QueryPostByTopicId(ctx context.Context, topicId int64) (*community.GetPostResponse, error)
+	QueryPostByTopicId(ctx context.Context, topicId int64) (*community.Post, error)
 }
 
 func RegisterCommunityService(s server.Service, dependency Dependency) error {
