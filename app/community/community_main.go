@@ -17,7 +17,7 @@ func main() {
 }
 
 func newDBGetter() *repo.Repo {
-	r, err := repo.NewRepo(repo.Dependency{ClientName: "blabla"})
+	r, err := repo.NewRepo(repo.Dependency{ClientName: "db.mysql.communityTopic"}) // trpc 的连接客户端
 	if err != nil {
 		return nil
 	}

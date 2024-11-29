@@ -2,12 +2,14 @@ package repo
 
 import (
 	"context"
+	"github.com/SIN5t/tRPC-go/app/community/repo/post"
 	"github.com/SIN5t/tRPC-go/app/community/repo/topic"
 	"trpc.group/trpc-go/trpc-database/mysql"
 )
 
 type Repo struct {
-	t topic.CommunityTopicRepo
+	topic.CommunityTopicRepo
+	post.CommunityPostRepo
 }
 
 type Dependency struct {
@@ -20,7 +22,10 @@ func NewRepo(d Dependency) (*Repo, error) {
 	}
 
 	r := &Repo{}
-	if err := r.t.InitRepoTopic(topic.Dependency{DBGetter: dbGetter}); err != nil {
+	if err := r.InitRepoTopic(topic.Dependency{DBGetter: dbGetter}); err != nil {
+		return nil, err
+	}
+	if err := r.InitPostRepo(post.Dependency{DBGetter: dbGetter}); err != nil {
 		return nil, err
 	}
 

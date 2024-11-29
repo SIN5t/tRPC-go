@@ -7,7 +7,7 @@ import (
 	"trpc.group/trpc-go/trpc-database/mysql"
 )
 
-type PostRepo struct {
+type CommunityPostRepo struct {
 	d Dependency
 }
 
@@ -15,13 +15,14 @@ type Dependency struct {
 	DBGetter func(ctx context.Context) (mysql.Client, error)
 }
 
-func (p PostRepo) InitPostRepo(dependency Dependency) {
+func (p *CommunityPostRepo) InitPostRepo(dependency Dependency) error {
 	p.d = dependency
+	return nil
 }
 
 //QueryPostByTopicId(ctx context.Context, topicId int64) (*community.Post, error)
 
-func (p *PostRepo) QueryPostByTopicId(ctx context.Context, topicId int64) (*community.Post, error) {
+func (p *CommunityPostRepo) QueryPostByTopicId(ctx context.Context, topicId int64) (*community.Post, error) {
 
 	// db逻辑
 	db, err := p.d.DBGetter(ctx)
@@ -30,7 +31,7 @@ func (p *PostRepo) QueryPostByTopicId(ctx context.Context, topicId int64) (*comm
 		return nil, err
 	}
 	postDao := &community.Post{}
-	db.Select(ctx, postDao, "selct * from post where topic_id = ?", topicId)
+	db.Select(ctx, postDao, "select * from post where topic_id = ?", topicId)
 	return postDao, nil
 
 }
