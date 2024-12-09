@@ -26,10 +26,11 @@ func (addTask *AddTask) Do() {
 
 func TestDistribute(t *testing.T) {
 	wg := sync.WaitGroup{}
-	numOfTask := 8
+	numOfTask := 5
 	resChan := make(chan int, numOfTask)
-	addTaskChan := initTask(numOfTask, 100, resChan)
-	DistributeTasks(addTaskChan, numOfTask, wg)
+	addTaskChan := make(chan *AddTask, numOfTask)
+	go initTask(addTaskChan, numOfTask, 11, resChan)
+	go DistributeTasks(addTaskChan, numOfTask, wg)
 	res := 0
 	wg.Wait()
 	close(resChan)
@@ -40,11 +41,11 @@ func TestDistribute(t *testing.T) {
 
 }
 
-func initTask(numOfTask int, num int, resChan chan int) chan *AddTask {
+func initTask(tasksChan chan *AddTask, numOfTask int, num int, resChan chan int) {
 	n := num / numOfTask
 	m := num % numOfTask
 
-	tasksChan := make(chan *AddTask, numOfTask)
+	defer close(tasksChan)
 	for i := 0; i < n; i++ {
 		b := numOfTask * i
 		e := numOfTask * (i + 1)
@@ -62,10 +63,9 @@ func initTask(numOfTask int, num int, resChan chan int) chan *AddTask {
 			Res:   resChan,
 		}
 	}
-	return tasksChan
 }
 
-func DistributeTasks(taskChan chan *AddTask, numOfTasks int, wg sync.WaitGroup) {
+func DistributeTasks(taskChan <-chan *AddTask, numOfTasks int, wg sync.WaitGroup) {
 
 	for task := range taskChan {
 		wg.Add(1)
@@ -74,5 +74,4 @@ func DistributeTasks(taskChan chan *AddTask, numOfTasks int, wg sync.WaitGroup) 
 			task.Do()
 		}()
 	}
-
 }
