@@ -25,20 +25,23 @@ func (addTask *AddTask) Do() {
 }
 
 func TestDistribute(t *testing.T) {
-	wg := sync.WaitGroup{}
 	numOfTask := 5
 	resChan := make(chan int, numOfTask)
 	addTaskChan := make(chan *AddTask, numOfTask)
+
 	go initTask(addTaskChan, numOfTask, 11, resChan)
-	go DistributeTasks(addTaskChan, numOfTask, wg)
-	res := 0
-	wg.Wait()
-	close(resChan)
-	for resCh := range resChan {
-		res += resCh
-	}
+	go DistributeTasks(addTaskChan, resChan)
+
+	res := ProcessRes(resChan)
 	fmt.Println(res)
 
+}
+
+func ProcessRes(resChan <-chan int) (res int) {
+	for r := range resChan {
+		res += r
+	}
+	return res
 }
 
 func initTask(tasksChan chan *AddTask, numOfTask int, num int, resChan chan int) {
@@ -59,19 +62,21 @@ func initTask(tasksChan chan *AddTask, numOfTask int, num int, resChan chan int)
 	if m != 0 {
 		tasksChan <- &AddTask{
 			Begin: n * numOfTask,
-			End:   num,
+			End:   num + 1,
 			Res:   resChan,
 		}
 	}
 }
 
-func DistributeTasks(taskChan <-chan *AddTask, numOfTasks int, wg sync.WaitGroup) {
-
+func DistributeTasks(taskChan <-chan *AddTask, resChan chan int) {
+	var wg sync.WaitGroup
 	for task := range taskChan {
 		wg.Add(1)
-		go func() {
+		go func(t *AddTask) {
 			defer wg.Done()
-			task.Do()
-		}()
+			t.Do()
+		}(task) // 注意要当作参数传入，而不是直接在 开启的协程 内部调用task，
 	}
+	wg.Wait()
+	close(resChan)
 }

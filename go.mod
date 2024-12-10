@@ -1,8 +1,9 @@
 module github.com/SIN5t/tRPC-go
 
-go 1.20
+go 1.23.4
 
 require (
+	bou.ke/monkey v1.0.2
 	github.com/stretchr/testify v1.8.1
 	google.golang.org/protobuf v1.35.1
 	trpc.group/trpc-go/trpc-database/mysql v1.0.0
@@ -10,7 +11,6 @@ require (
 )
 
 require (
-	bou.ke/monkey v1.0.2 // indirect
 	github.com/BurntSushi/toml v0.3.1 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
