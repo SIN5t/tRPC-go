@@ -4,8 +4,22 @@ import (
 	"context"
 	"github.com/SIN5t/tRPC-go/app/community/repo/post"
 	"github.com/SIN5t/tRPC-go/app/community/repo/topic"
+	gormMysql "gorm.io/driver/mysql"
+	"gorm.io/gorm"
 	"trpc.group/trpc-go/trpc-database/mysql"
 )
+
+var DB *gorm.DB
+
+func InitDB() {
+	dsn := "root:123456@tcp(127.0.0.1:3307)/yicwu?charset=utf8mb4&parseTime=True&loc=Local"
+
+	db, err := gorm.Open(gormMysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		return
+	}
+	DB = db
+}
 
 type Repo struct {
 	topic.CommunityTopicRepo

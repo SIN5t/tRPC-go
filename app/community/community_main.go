@@ -3,6 +3,8 @@ package main
 import (
 	"github.com/SIN5t/tRPC-go/app/community/repo"
 	"github.com/SIN5t/tRPC-go/app/community/service"
+	"trpc.group/trpc-go/trpc-go/log"
+
 	"trpc.group/trpc-go/trpc-go"
 )
 
@@ -13,7 +15,11 @@ func main() {
 	if err != nil {
 		return
 	}
-	s.Serve()
+	repo.InitDB()
+	if err := s.Serve(); err != nil {
+		log.Fatal("服务开启失败： %v", err)
+	}
+
 }
 
 func newDBGetter() *repo.Repo {
